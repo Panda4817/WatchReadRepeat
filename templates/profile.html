@@ -1,0 +1,207 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Account
+{% endblock %}
+
+{% block main %}
+       <div class="row justify-content-around align-items-start m-2">
+        <div class="col-md-6 text-center">
+          <h2 class="text-blue display-4">Account details</h2>
+          <br>
+        <h4 class="text-grey">Username: <small>{{ username }}</small></h4>
+        <br>
+        <h4 class="text-grey">Email: <small>{{ email }}</small></h4>
+        <br>
+        <p class="text-grey font-italic">Update account details using the links and forms.</p>
+        <div>
+            <button class="btn-lg bg-black text-grey border-blue btn-hover p-2 m-3" data-toggle="modal" data-target="#delete">Delete Account</button>
+        </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+           <h4 class="text-blue text-center">Marketing preference</h4>
+
+           <p class="text-grey text-center lead">
+               {% if market == true %}
+               You want to be emailed marketing information.
+               {% else %}
+                You do not want to be emailed marketing information.
+               {% endif %}
+               </p>
+           <p class="text-grey text-center font-italic">Use the form below to change your marketing preference.</p>
+
+           <form action="/profile-market" method="POST" class="text-blue text-center">
+               <div class="form-check-inline">
+                  <label class="form-check-label" for="markety">
+                    <input type="radio" class="form-check-input" id="markety" name="marketopt" value="yes"
+                    {% if market == true %}
+                    checked
+                    {% endif %}>Yes email me
+                  </label>
+                </div>
+                <div class="form-check-inline">
+                  <label class="form-check-label" for="marketn">
+                    <input type="radio" class="form-check-input" id="marketn" name="marketopt" value="no"
+                    {% if market == false %}
+                    checked
+                    {% endif %}>No do not email me
+                  </label>
+                </div>
+                <br>
+               <button class="btn-lg bg-black text-grey border-blue btn-hover m-3" type="submit">Update marketing preference</button>
+           </form>
+            <div class="m-3 text-center justify-content-center"><button class="btn-lg bg-black text-grey border-blue btn-hover p-2 m-3" data-toggle="modal" data-target="#username">Update Username</button><br>
+       <button class="btn-lg bg-black text-grey border-blue btn-hover p-2 m-3" data-toggle="modal" data-target="#email">Update Email</button><br>
+       <button class="btn-lg bg-black text-grey border-blue btn-hover p-2 m-3" data-toggle="modal" data-target="#password">Update Password</button></div>
+        </div>
+       </div>
+
+
+   <div class="modal fade" id="password">
+    <div class="modal-dialog">
+      <div class="modal-content border-blue">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-black">
+          <h4 class="modal-title text-grey">Update Password</h4>
+          <button type="button" class="close text-grey" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-blue bg-black">
+            Password needs to be minimum length of <strong>6</strong> and maximum length of <strong>15</strong>, with <strong>no spaces</strong>.
+            <br><br>
+            Password needs to have at least 1 <strong>number</strong>, at least 1 <strong>lowercase</strong> letter, at least 1 <strong>uppercase</strong> letter and at least 1 <strong>special character</strong>.
+            <br><br>
+        <form action="/profile-password" method="POST">
+           <div class="form-group text-blue">
+          <label for="password">Current password:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-key text-black"></i></span></div>
+          <input class="form-control" name="current_password" placeholder="Enter current password" type="password" required>
+          </div></div>
+           <div class="form-group text-blue">
+          <label for="password">New password:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-key text-black"></i></span></div>
+          <input class="form-control" name="new_password" placeholder="Enter new password" type="password" required>
+          </div></div>
+           <div class="form-group text-blue">
+          <label for="password">Confirm new password:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-key text-black"></i></span></div>
+          <input class="form-control" name="confirmation" placeholder="Enter new password again" type="password" required>
+          </div></div>
+          <button class="btn btn-block bg-black text-grey border-blue btn-hover" type="submit">Update password</button>
+        </form>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="email">
+    <div class="modal-dialog">
+      <div class="modal-content border-blue">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-black">
+          <h4 class="modal-title text-grey">Update Email</h4>
+          <button type="button" class="close text-grey" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-blue bg-black">
+         <form action="/profile-email" method="POST">
+          <div class="form-group text-blue">
+          <label for="email">New email:</label>
+           <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-at text-black"></i></span></div>
+          <input autocomplete="off" autofocus class="form-control" name="new_email" placeholder="Enter new email" type="email" required required pattern="^.+@[^\.].*\.[a-z]{2,}$" title="email address format: something@domain.something">
+          </div></div>
+          <div class="form-group text-blue">
+          <label for="email">Confirm new email:</label>
+           <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-at text-black"></i></span></div>
+          <input autocomplete="off" autofocus class="form-control" name="Econfirmation" placeholder="Enter new email again" type="email" required required pattern="^.+@[^\.].*\.[a-z]{2,}$" title="email address format: something@domain.something">
+          </div></div>
+          <button class="btn btn-block bg-black text-grey border-blue btn-hover" type="submit">Update email</button>
+        </form>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+   <div class="modal fade" id="username">
+    <div class="modal-dialog">
+      <div class="modal-content border-blue">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-black">
+          <h4 class="modal-title text-grey">Update Username</h4>
+          <button type="button" class="close text-grey" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-blue bg-black">
+        <p class=" text-center text-blue lead">It must NOT contain your real name. It should <strong>only contain letters and/or numbers</strong>.</p>
+        <form action="/profile-username" method="POST">
+          <div class="form-group text-blue">
+           <label for="username">New username:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-user text-black"></i></span></div>
+          <input autocomplete="off" autofocus class="form-control" name="new_username" placeholder="Enter new username" type="text" required pattern="^[a-zA-Z0-9]*$" title="Only letters and/or numbers">
+          </div></div>
+          <div class="form-group text-blue">
+           <label for="username">Confirm new username:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-user text-black"></i></span></div>
+          <input autocomplete="off" autofocus class="form-control" name="Uconfirmation" placeholder="Enter new username again" type="text" required pattern="^[a-zA-Z0-9]*$" title="Only letters and/or numbers">
+          </div></div>
+           <button class="btn btn-block bg-black text-grey border-blue btn-hover" type="submit">Update username</button>
+        </form>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="delete">
+    <div class="modal-dialog">
+      <div class="modal-content border-blue">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-black">
+          <h4 class="modal-title text-grey">Confirm Deleting Account</h4>
+          <button type="button" class="close text-grey" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-blue bg-black">
+         <form action="/delete-account" method="POST">
+          <p>Once account is deleted, all data associated with the account will be deleted including email address, username, password and all lists. This data will be unrecoverable.</p>
+          <p>Once you confirm the deletion, you will be logged out.</p>
+          <p>Are you sure you want to delete your account?</p>
+          <button class="btn btn-block bg-black text-grey border-blue btn-hover" type="submit">Yes, delete the account</button>
+        </form>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
+
+

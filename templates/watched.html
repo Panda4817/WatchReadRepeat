@@ -1,0 +1,311 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Watched
+{% endblock %}
+
+{% block main %}
+
+<script>
+     function submitForm(idRow) {
+                confirmform = document.createElement("form"); // CREATE A NEW FORM TO DUMP ELEMENTS INTO FOR SUBMISSION
+                confirmform.method = "post"; // CHOOSE FORM SUBMISSION METHOD, "GET" OR "POST"
+                confirmform.action = "/confirm-watched";
+                 $("#"+idRow+" td").children("[href]").each(function() { // GRAB CHILD ELEMENT with href OF <TD>'S IN THE ROW IDENTIFIED BY idRow, CLONE THEM, AND DUMP THEM IN OUR FORM
+                    input = document.createElement("input");
+                    input.type = "text";
+                    input.name = this.name;
+                    input.id = input.name +idRow;
+                    input.value = idRow;
+                    confirmform.appendChild(input);
+                });
+                document.body.appendChild(confirmform);
+                confirmform.style.display = "none";
+
+                $(confirmform).ready(function() {
+                let imdb_id = $("input:last").val();
+
+                $.ajax({
+                        data : {
+                            imdb_id : imdb_id
+                        },
+                        type: 'POST',
+                        url: '/confirm-watched'
+                    })
+                    .done(function(data) {
+                    console.log(data);
+                    $('#confirmResult').html(data).show();
+                    $('#results').hide();
+                    });
+                });
+
+
+    }
+</script>
+
+
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-10">
+                <h2 class="text-blue text-center display-3" >You have watched...</h2>
+            </div>
+        </div>
+
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-10 pb-5">
+            <h4 class="text-center"><span class="btn bg-black text-blue border-blue btn-hover p-2" data-toggle="modal" data-target="#add-title">Add title</span></h4>
+            </div>
+        </div>
+
+                <div class="row align-items-center justify-content-center">
+                <div class="col-lg-10 table-responsive-xl" id="table">
+                    <table id="watched" class="table table-dark table-striped table-hover text-grey bg-black">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th>Type</th>
+                                <th>Title</th>
+                                <th>{{ username }}'s rating /10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in info %}
+                            <tr class="cursor" data-toggle="modal" data-target="#{{ row['imdb_id']|e }}">
+                                <td><img class="poster align-self-center mx-auto d-block img-fluid"
+
+                                src="{{ row['poster_url']|e }}"
+
+                                alt="poster"></td>
+                                <td>{{ row['type'] }}</td>
+                                <td>{{ row['title'] }}</td>
+                                <td>{{ row['rating'] }}</td>
+                                <td>{{ row['timestamp'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+
+
+
+<div class="modal fade" id="add-title">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content border-blue">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-black">
+          <h4 class="modal-title text-grey">Title Search</h4>
+          <button type="button" class="close text-grey" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-blue bg-black">
+        <div id="confirmResult">
+
+        </div>
+
+       <div class="border rounded border-blue p-3 n3">
+        <form id="search" action="/title-search" method="POST">
+           <div class="form-group text-blue">
+          <label for="title">Title:</label>
+          <input class="form-control" name="title" id="titleInput" placeholder="Enter title of movie/tv show" type="text" required>
+          </div>
+           <div class="form-check">
+                  <label class="form-check-label" for="movie">
+                    <input type="radio" class="form-check-input" id="movie" name="type" value="movie" checked>
+                    Movie
+                  </label>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label" for="tv">
+                    <input type="radio" class="form-check-input" id="tv" name="type" value="tv show">
+                    TV show
+                  </label>
+                </div>
+          <button class="btn btn-block bg-blue text-black border-blue modal-btn" id="searchButton" type="submit">Search</button>
+        </form>
+        </div>
+        <br>
+        <div id="results">
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  {% for row in info %}
+  <div class="modal fade"  id="{{ row['imdb_id']|e }}">
+    <div class="modal-dialog">
+      <div class="modal-content border-blue">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-black">
+          <h4 class="modal-title text-grey">{{ row['title'] }}</h4>
+          <button type="button" class="close text-grey" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-blue bg-black">
+            <div class="row pb-4">
+                <div class="col-md-6">
+                   <img class=" align-self-center mx-auto d-block img-fluid"
+                            src="{{ row['poster_url']|e }}"
+                            alt="poster">
+                </div>
+                <div class="col-md-6">
+                    <h6>Type: <small class="text-grey">{{ row['type'] }}</small></h6>
+                    {% if row.type == "movie" %}
+                    <h6>Year: <small class="text-grey">{{ row['year'] }}</small></h6>
+                    <h6>Length: <small class="text-grey">{{ row['length'] }}</small></h6>
+                    {% endif %}
+                    <h6>Plot: <small class="text-grey">{{ row['plot'] }}</small></h6>
+                    <h6>Your Rating: <small class="text-grey">{{ row['rating'] }} / 10</small></h6>
+                    <h6>IMDb link: <a href="{{ row['imdb_link']|e }}" class="text-decoration-none" target="_blank"><small class="text-grey">{{ row['imdb_link'] }}</small></a></h6>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-3">
+                    <form action="/remove-watched" method="POST">
+                        <input type="text" name="remove" value="{{ row['imdb_id']|e }}" style="display: none;">
+                        <h6><button type="submit" class="btn btn-block bg-blue text-black border-blue modal-btn">Remove</button></h6>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                   <form action="/type-watched" method="POST">
+                       <input type="text" name="type{{ row['imdb_id']|e }}" value="{{ row['imdb_id']|e }}" style="display: none;">
+                       <h6><button type="submit" imdb_id="{{ row['imdb_id']|e }}" class="btn btn-block bg-blue text-black border-blue modal-btn editType">Edit Type</button></h6>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <form action="/rating-watched" method="POST">
+                        <input type="text" name="rating{{ row['imdb_id']|e }}" value="{{ row['imdb_id']|e }}" style="display: none;">
+                        <h6><button type="submit" imdb_id="{{ row['imdb_id']|e }}" class="btn btn-block bg-blue text-black border-blue modal-btn editRating">Edit Rating</button></h6>
+                    </form>
+                </div>
+                <div class="col-md-3">
+                    <form action="/new-series" method="POST">
+                        <input type="text" name="new_series" value="{{ row['imdb_id']|e }}" style="display: none;">
+                        <h6><button type="submit" imdb_id="{{ row['imdb_id']|e }}" class="btn btn-block bg-blue text-black border-blue modal-btn">Watching again</button></h6>
+                    </form>
+                </div>
+            </div>
+            <div id="typeChange{{ row['imdb_id']|e }}">
+            </div>
+            <div id="ratingChange{{ row['imdb_id']|e }}">
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <script>
+        $(document).ready( function () {
+            $('#watched').DataTable( {
+
+                "order": [[4, "desc"]],
+            	"columnDefs": [
+            	    {
+                        "targets": 0,
+                        "searchable": false,
+                        "orderable": false
+                    },
+                    {
+                        "targets": 4,
+                        "visible": false
+                    },
+                    {
+                        "targets": "_all",
+                        "width": "25%"
+                    }
+                ]
+
+            });
+
+            $('#search').on('submit', function(event) {
+               $.ajax({
+                  data : {
+                     title : $('#titleInput').val(),
+                     type: $('input[name="type"]:checked').val(),
+                         },
+                     type : 'POST',
+                     url : '/title-search'
+                    })
+                .done(function(data) {
+
+                  $('#results').html(data).show();
+                  $('#confirmResult').hide();
+              });
+              event.preventDefault();
+             $('#add-title').on('hide.bs.modal', function() {
+                 $('#results').empty();
+                  $('#confirmResult').empty();
+             });
+
+            });
+
+
+            $('.editType').on('click', function(event) {
+
+               let imdb_id = $(this).attr('imdb_id');
+
+               $.ajax({
+                  data : {
+                        typeChange: imdb_id
+                         },
+                     type : 'POST',
+                     url : '/type-watched'
+                    })
+                .done(function(data) {
+
+                  $('#typeChange'+imdb_id).html(data).show();
+                  $('#ratingChange'+imdb_id).hide();
+              });
+              event.preventDefault();
+             $('#'+imdb_id).on('hide.bs.modal', function() {
+                  $('#typeChange'+imdb_id).empty();
+            });
+
+
+            });
+
+            $('.editRating').on('click', function(event) {
+
+               let imdb_id = $(this).attr('imdb_id');
+
+               $.ajax({
+                  data : {
+                        ratingChange: imdb_id
+                         },
+                     type : 'POST',
+                     url : '/rating-watched'
+                    })
+                .done(function(data) {
+
+                  $('#ratingChange'+imdb_id).html(data).show();
+                  $('#typeChange'+imdb_id).hide();
+              });
+              event.preventDefault();
+            $('#'+imdb_id).on('hide.bs.modal', function() {
+                  $('#ratingChange'+imdb_id).empty();
+            });
+
+
+            });
+
+    });
+
+
+
+
+  </script>
+
+{% endblock %}
+
+
+
+
+

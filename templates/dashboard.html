@@ -1,0 +1,689 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block main %}
+<div class="row justify-content-between m-1">
+    <div class="col-lg-4 text-blue text-center">
+        <div id="watch" class="carousel slide mx-auto" data-ride="carousel" data-interval="5000" data-pause="false">
+
+    <!-- The slideshow -->
+        <div class="carousel-inner text-center text-blue">
+            <div class="carousel-item active item1">
+                <h3>Recently Watched:</h3>
+                <p>{{ title1 }}</p>
+            </div>
+            <div class="carousel-item item2">
+                <h3>Watching:</h3>
+                <p>{{ title2 }}</p>
+            </div>
+            <div class="carousel-item item3">
+                <h3>Want to watch:</h3>
+                <p>{{ title3 }}</p>
+            </div>
+        </div>
+
+        </div>
+        <div id="watchpic" class="carousel slide mx-auto " data-ride="carousel" data-interval="5000" data-pause="false" >
+
+            <!-- Indicators -->
+            <ul class="carousel-indicators">
+                <li data-target="#watchpic" data-slide-to="0" class="active item1"></li>
+                <li data-target="#watchpic" data-slide-to="1" class="item2"></li>
+                <li data-target="#watchpic" data-slide-to="2" class="item3"></li>
+            </ul>
+
+  <!-- The slideshow -->
+        <div class="carousel-inner">
+            <div class="carousel-item active item1">
+              {% if img1 == "#" %}
+              <h3 class="text-pink text-center font-weight-lighter pb-5 pl-5 pr-5">“ May the Force be with you.”― Star Wars, 1977</h3>
+              {% else %}
+              <img src="{{ img1 }}" alt="poster" class="d-block w-75 mx-auto border rounded-lg border-blue img-fluid">
+              {% endif %}
+            </div>
+            <div class="carousel-item item2">
+              {% if img2 == "#" %}
+              <h3 class="text-pink text-center font-weight-lighter pb-5 pl-5 pr-5">“ I'm the king of the world!”― Titanic, 1997</h3>
+              {% else %}
+              <img src="{{ img2 }}" alt="poster" class="d-block w-75 mx-auto border rounded-lg border-blue img-fluid">
+              {% endif %}
+            </div>
+            <div class="carousel-item item3">
+              {% if img3 == "#" %}
+              <h3 class="text-pink text-center font-weight-lighter pb-5 pl-5 pr-5">“Magic Mirror on the wall, who is the fairest one of all?"― Snow White and the Seven Dwarfs, 1937</h3>
+              {% else %}
+              <img src="{{ img3 }}" alt="poster" class="d-block w-75 mx-auto border rounded-lg border-blue img-fluid">
+              {% endif %}
+            </div>
+        </div>
+
+  <!-- Left and right controls -->
+        <a class="carousel-control-prev watch-prev" href="#watchpic" data-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next watch-next" href="#watchpic" data-slide="next">
+        <span class="carousel-control-next-icon"></span>
+        </a>
+
+        </div>
+
+         <input id="fread" style="display: none;" value="{{ fread }}"></input>
+        <input id="nfread" style="display: none;" value="{{ nfread }}"></input>
+        <input id="freading" style="display: none;" value="{{ freading }}"></input>
+        <input id="nfreading" style="display: none;" value="{{ nfreading }}"></input>
+        <input id="fread_wish" style="display: none;" value="{{ fread_wish }}"></input>
+        <input id="nfread_wish" style="display: none;" value="{{ nfread_wish }}"></input>
+        <h3 class="mt-3">Number of fiction/non-fiction books in each list</h3>
+        <div class="chart-container align-self-center">
+         <canvas id="readBarChart" aria-label="Reading counts bar chart" role="img" height="300"></canvas>
+        </div>
+
+    </div>
+
+    <div class="col-lg-4 text-blue text-center">
+        <h3>Your Top 5 Movies and TV Shows:</h3>
+        <div class="row justify-content-center">
+            <div class="col">
+              <h6><button type="button" class="btn btn-block bg-black text-grey border-blue btn-dashboard btn-active both_watch">Both</button></h6>
+            </div>
+            <div class="col">
+               <h6><button type="button" class="btn btn-block bg-black text-grey border-blue btn-dashboard movies">Movies</button></h6>
+            </div>
+            <div class="col-5">
+              <h6><button type="button" class="btn btn-block bg-black text-grey border-blue btn-dashboard tv_shows">TV Shows</button></h6>
+            </div>
+
+        </div>
+        <div id="both_watch" class="row text-blue align-self-start text-center">
+            <table class="table table-dark table-striped bg-black text-grey">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Rating /10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in both_watch %}
+                                {% if row['rating'] == 'None' %}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{ row['title'] }}</td>
+                                    <td></td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="text-pink align-self-center"><h4><strong>{{ row['number'] }}</strong></h4></td>
+                                    <td><img class="small align-self-center mx-auto d-block img-fluid"
+
+                                    src="{{ row['poster_url']|e }}"
+
+                                    alt="poster"></td>
+                                    <td>{{ row['title'] }}</td>
+                                    <td>{{ row['rating'] }}</td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+        </div>
+
+        <div id="movies" class="row text-blue align-self-start text-center" style="display: none;">
+              <table class="table table-dark table-striped text-grey bg-black">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Rating /10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             {% for row in movies %}
+                                {% if row['rating'] == 'None' %}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{ row['title'] }}</td>
+                                    <td></td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="text-pink align-self-center"><h4><strong>{{ row['number'] }}</strong></h4></td>
+                                    <td><img class="small align-self-center mx-auto d-block img-fluid"
+
+                                    src="{{ row['poster_url']|e }}"
+
+                                    alt="poster"></td>
+                                    <td>{{ row['title'] }}</td>
+                                    <td>{{ row['rating'] }}</td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+        </div>
+
+        <div id="tv_shows" class="row text-blue align-self-start text-center" style="display: none;">
+              <table class="table table-dark table-striped text-grey bg-black">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Rating /10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             {% for row in tv_shows %}
+                                {% if row['rating'] == 'None' %}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>{{ row['title'] }}</td>
+                                    <td></td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="text-pink align-self-center"><h4><strong>{{ row['number'] }}</strong></h4></td>
+                                    <td><img class="small align-self-center mx-auto d-block img-fluid"
+
+                                    src="{{ row['poster_url']|e }}"
+
+                                    alt="poster"></td>
+                                    <td>{{ row['title'] }}</td>
+                                    <td>{{ row['rating'] }}</td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+        </div>
+    <h3 class="mt-3">Your Top 5 Books:</h3>
+        <div class="row justify-content-center">
+            <div class="col">
+              <h6><button type="button" class="btn btn-block bg-black text-grey border-blue btn-dashboard btn-active both_read">Both</button></h6>
+            </div>
+            <div class="col">
+               <h6><button type="button" class="btn btn-block bg-black text-grey border-blue btn-dashboard fiction">Fiction</button></h6>
+            </div>
+            <div class="col-5">
+              <h6><button type="button" class="btn btn-block bg-black text-grey border-blue btn-dashboard non_fiction">Non-Fiction</button></h6>
+            </div>
+
+        </div>
+
+        <div id="both_read"class="row text-blue align-self-start text-center">
+              <table class="table table-dark table-striped text-grey bg-black">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Rating /10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in both_read %}
+                                {% if row['rating'] == 'None' %}
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{ row['title'] }}</td>
+                                        <td></td>
+                                    </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="text-pink align-self-center"><h4><strong>{{ row['number'] }}</strong></h4></td>
+                                    <td><img class="small_books align-self-center mx-auto d-block img-fluid"
+
+                                    src="{{ row['smallimage']|e }}"
+
+                                    alt="cover"></td>
+                                    <td>{{ row['title'] }}</td>
+                                    <td>{{ row['rating'] }}</td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+        </div>
+
+        <div id="fiction" class="row text-blue align-self-start text-center" style="display: none;">
+            <table class="table table-dark table-striped text-grey bg-black">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Rating /10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in fiction %}
+                                {% if row['rating'] == 'None' %}
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{ row['title'] }}</td>
+                                        <td></td>
+                                    </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="text-pink align-self-center"><h4><strong>{{ row['number'] }}</strong></h4></td>
+                                    <td><img class="small_books align-self-center mx-auto d-block img-fluid"
+
+                                    src="{{ row['smallimage']|e }}"
+
+                                    alt="cover"></td>
+                                    <td>{{ row['title'] }}</td>
+                                    <td>{{ row['rating'] }}</td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+        </div>
+
+        <div id="non_fiction" class="row text-blue align-self-start text-center" style="display: none;">
+            <table class="table table-dark table-striped text-grey bg-black">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Rating /10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           {% for row in non_fiction %}
+                                {% if row['rating'] == 'None' %}
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{ row['title'] }}</td>
+                                        <td></td>
+                                    </tr>
+                                {% else %}
+                                <tr>
+                                    <td class="text-pink align-self-center"><h4><strong>{{ row['number'] }}</strong></h4></td>
+                                    <td><img class="small_books align-self-center mx-auto d-block img-fluid"
+
+                                    src="{{ row['smallimage']|e }}"
+
+                                    alt="cover"></td>
+                                    <td>{{ row['title'] }}</td>
+                                    <td>{{ row['rating'] }}</td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+        </div>
+
+
+
+    </div>
+    <div class="col-lg-4 text-blue text-center">
+     <input id="mwatched" style="display: none;" value="{{ mwatched }}"></input>
+        <input id="twatched" style="display: none;" value="{{ twatched }}"></input>
+        <input id="mwatching" style="display: none;" value="{{ mwatching }}"></input>
+        <input id="twatching" style="display: none;" value="{{ twatching }}"></input>
+        <input id="mwatch_wish" style="display: none;" value="{{ mwatch_wish }}"></input>
+        <input id="twatch_wish" style="display: none;" value="{{ mwatch_wish }}"></input>
+        <h3>Number of movies/tv shows in each list</h3>
+        <div class="chart-container align-self-center">
+        <canvas id="watchBarChart" aria-label="Watch counts bar chart" role="img" height="300"></canvas>
+        </div>
+
+        <div id="read" class="carousel slide mx-auto mt-3" data-ride="carousel" data-interval="5000" data-pause="false">
+
+    <!-- The slideshow -->
+        <div class="carousel-inner text-center text-blue">
+            <div class="carousel-item active book1">
+                <h3>Recently read:</h3>
+                <p>{{ book1 }}</p>
+            </div>
+            <div class="carousel-item book2">
+                <h3>Reading:</h3>
+                <p>{{ book2 }}</p>
+            </div>
+            <div class="carousel-item book3">
+                <h3>Want to read:</h3>
+                <p>{{ book3 }}</p>
+            </div>
+        </div>
+
+        </div>
+        <div id="bookpic" class="carousel slide mx-auto" data-ride="carousel" data-interval="5000" data-pause="false">
+
+            <!-- Indicators -->
+            <ul class="carousel-indicators">
+                <li data-target="#bookpic" data-slide-to="0" class="active book1"></li>
+                <li data-target="#bookpic" data-slide-to="1" class="book2"></li>
+                <li data-target="#bookpic" data-slide-to="2" class="book3"></li>
+            </ul>
+
+  <!-- The slideshow -->
+        <div class="carousel-inner">
+            <div class="carousel-item active book1">
+              {% if cover1 == "#" %}
+              <h3 class="text-pink text-center font-weight-lighter pb-5 pl-5 pr-5">“Fairy tales are more than true: not because they tell us that dragons exist, but because they tell us that dragons can be beaten.”― Neil Gaiman, Coraline</h3>
+              {% else %}
+              <img src="{{ cover1 }}" alt="poster" class="d-block w-75 mx-auto border rounded-lg border-blue img-fluid">
+              {% endif %}
+            </div>
+            <div class="carousel-item book2">
+              {% if cover2 == "#" %}
+              <h3 class="text-pink text-center font-weight-lighter pb-5 pl-5 pr-5">“You can never get a cup of tea large enough or a book long enough to suit me.”― C.S. Lewis</h3>
+              {% else %}
+              <img src="{{ cover2 }}" alt="poster" class="d-block w-75 mx-auto border rounded-lg border-blue img-fluid">
+              {% endif %}
+            </div>
+            <div class="carousel-item book3">
+              {% if cover3 == "#" %}
+              <h3 class="text-pink text-center font-weight-lighter pb-5 pl-5 pr-5">“If one cannot enjoy reading a book over and over again, there is no use in reading it at all.”― Oscar Wilde</h3>
+              {% else %}
+              <img src="{{ cover3 }}" alt="poster" class="d-block w-75 mx-auto border rounded-lg border-blue img-fluid">
+              {% endif %}
+            </div>
+        </div>
+
+  <!-- Left and right controls -->
+        <a class="carousel-control-prev book-prev" href="#bookpic" data-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next book-next" href="#bookpic" data-slide="next">
+        <span class="carousel-control-next-icon"></span>
+        </a>
+
+        </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function(){
+
+
+        // Enable Carousel Indicators
+        $(".item1").click(function(){
+        $("#watch").carousel(0);
+        });
+        $(".item2").click(function(){
+        $("#watch").carousel(1);
+        });
+        $(".item3").click(function(){
+        $("#watch").carousel(2);
+        });
+
+        // Enable Carousel Controls
+        $(".watch-prev").click(function(){
+        $("#watch").carousel("prev");
+        });
+        $(".watch-next").click(function(){
+        $("#watch").carousel("next");
+        });
+
+        // Enable Carousel Indicators
+        $(".book1").click(function(){
+        $("#read").carousel(0);
+        });
+        $(".book2").click(function(){
+        $("#read").carousel(1);
+        });
+        $(".book3").click(function(){
+        $("#read").carousel(2);
+        });
+
+        // Enable Carousel Controls
+        $(".book-prev").click(function(){
+        $("#read").carousel("prev");
+        });
+        $(".book-next").click(function(){
+        $("#read").carousel("next");
+        });
+
+        let ctx = document.getElementById('watchBarChart').getContext('2d');
+        Chart.defaults.global.defaultFontColor = '#c5c6c7';
+        let mwatched = $('#mwatched').val();
+        let twatched = $('#twatched').val();
+        let mwatching = $('#mwatching').val();
+        let twatching = $('#twatching').val();
+        let mwatch_wish = $('#mwatch_wish').val();
+        let twatch_wish = $('#twatch_wish').val();
+        let chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'bar',
+            // The data for our dataset
+            data: {
+            labels: ['Watched', 'Watching', 'Watch Wishlist'],
+            datasets: [{
+
+                label: 'Number of movies',
+                data: [mwatched, mwatching, mwatch_wish],
+                backgroundColor: [
+                    '#66fcf1',
+                    '#66fcf1',
+                    '#66fcf1'
+                    ],
+                borderColor: [
+                    '#66fcf1',
+                    '#66fcf1',
+                    '#66fcf1'
+                    ],
+                borderWidth: 2
+            },
+            {
+                label: 'Number of tv shows',
+                data: [twatched, twatching, twatch_wish],
+                backgroundColor: [
+                    '#fc6671',
+                    '#fc6671',
+                    '#fc6671',
+                ],
+                borderColor: [
+                   '#fc6671',
+                    '#fc6671',
+                    '#fc6671'
+                ],
+                borderWidth: 2
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                    gridLines: {
+                        display: true,
+                        drawOnChartArea: false,
+                        color: '#c5c6c7'
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    stacked: true,
+                    gridLines: {
+                        display: true,
+                        drawOnChartArea: false,
+                        color: '#c5c6c7'
+                    }
+                }]
+
+            },
+            responsive: true,
+            legend: {
+                display: true
+            }
+        }
+        });
+
+        let cty = document.getElementById('readBarChart').getContext('2d');
+        Chart.defaults.global.defaultFontColor = '#c5c6c7';
+        let fread = $('#fread').val();
+        let nfread = $('#nfread').val();
+        let freading = $('#freading').val();
+        let nfreading = $('#nfreading').val();
+        let fread_wish = $('#fread_wish').val();
+        let nfread_wish = $('#nfread_wish').val();
+        let chart2 = new Chart(cty, {
+            // The type of chart we want to create
+            type: 'bar',
+            // The data for our dataset
+            data: {
+            labels: ['Read', 'Reading', 'Reading Wishlist'],
+            datasets: [{
+
+                label: 'Number of fiction books',
+                data: [fread, freading, fread_wish],
+                backgroundColor: [
+                    '#66fcf1',
+                    '#66fcf1',
+                    '#66fcf1'
+                    ],
+                borderColor: [
+                    '#66fcf1',
+                    '#66fcf1',
+                    '#66fcf1'
+                    ],
+                borderWidth: 2
+            },
+            {
+                label: 'Number of non-fiction books',
+                data: [nfread, nfreading, nfread_wish],
+                backgroundColor: [
+                    '#fc6671',
+                    '#fc6671',
+                    '#fc6671',
+                ],
+                borderColor: [
+                   '#fc6671',
+                    '#fc6671',
+                    '#fc6671'
+                ],
+                borderWidth: 2
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                    gridLines: {
+                        display: true,
+                        drawOnChartArea: false,
+                        color: '#c5c6c7'
+                    }
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    stacked: true,
+                    gridLines: {
+                        display: true,
+                        drawOnChartArea: false,
+                        color: '#c5c6c7'
+                    }
+                }]
+
+            },
+            responsive: true,
+            legend: {
+                display: true
+            }
+        }
+        });
+
+        $('.movies').on('click', function() {
+
+            $('.both_watch').removeClass('btn-active')
+            $('.tv_shows').removeClass('btn-active')
+            $('.movies').addClass('btn-active')
+            $('#movies').show();
+            $('#both_watch').hide();
+            $('#tv_shows').hide();
+
+
+        });
+
+         $('.tv_shows').on('click', function() {
+
+            $('.both_watch').removeClass('btn-active')
+            $('.movies').removeClass('btn-active')
+            $('.tv_shows').addClass('btn-active')
+            $('#tv_shows').show();
+            $('#both_watch').hide();
+            $('#movies').hide();
+
+
+        });
+
+         $('.both_watch').on('click', function() {
+
+            $('.movies').removeClass('btn-active')
+            $('.tv_shows').removeClass('btn-active')
+            $('.both_watch').addClass('btn-active')
+            $('#both_watch').show();
+            $('#movies').hide();
+            $('#tv_shows').hide();
+
+
+        });
+
+        $('.fiction').on('click', function() {
+
+            $('.both_read').removeClass('btn-active')
+            $('.non_fiction').removeClass('btn-active')
+            $('.fiction').addClass('btn-active')
+            $('#fiction').show();
+            $('#both_read').hide();
+            $('#non_fiction').hide();
+
+
+        });
+
+         $('.non_fiction').on('click', function() {
+
+            $('.both_read').removeClass('btn-active')
+            $('.fiction').removeClass('btn-active')
+            $('.non_fiction').addClass('btn-active')
+            $('#non_fiction').show();
+            $('#both_read').hide();
+            $('#fiction').hide();
+
+
+        });
+
+        $('.both_read').on('click', function() {
+
+            $('.fiction').removeClass('btn-active')
+            $('.non_fiction').removeClass('btn-active')
+            $('.both_read').addClass('btn-active')
+            $('#both_read').show();
+            $('#fiction').hide();
+            $('#non_fiction').hide();
+
+
+        });
+
+
+    });
+
+
+</script>
+
+
+{% endblock %}

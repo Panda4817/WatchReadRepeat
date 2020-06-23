@@ -1,0 +1,36 @@
+<h4 id="confirm">Confirm and add:</h4>
+<div class="row pb-4">
+                <div class="col-md-6 align-self-center">
+                   <img class=" align-self-center mx-auto d-block img-fluid border border-blue rounded"
+
+                            src="{% if row['largeimage'] %}
+                                {{ row['largeimage']|e }}
+                                {% elif row['mediumimage'] %}
+                                {{ row['mediumimage']|e }}
+                                {% else %}
+                                {{ row['smallimage']|e }}
+                                {% endif %}" alt="poster">
+                </div>
+                <div class="col-md-6">
+                    <h6>Title: <small class="text-grey">{{ row['title'] }}</small></h6>
+                    <h6>Type: <small class="text-grey">{{ _type }}</small></h6>
+                    <h6>Author(s): <small class="text-grey">
+                        {% for x in row['authors'] %}
+                            {{ x }}<br>
+                        {% endfor %}
+                        </small></h6>
+                    <h6>Publisher: <small class="text-grey">{{ row['publisher'] }}</small></h6>
+                    <h6>Description: <small class="text-grey">{{ row['description']|safe}}</small></h6>
+                    <form class="form-inline" action="/add-reading" method="POST">
+                      <label for="rating" class="mr-sm-2 text-blue">Your Rating so far:</label>
+                      <input type="text" name="rating" pattern="(10(\.00?)?|[0-9](\.[0-9][0-9]?)?)" title="rating between 0 and 10" class="form-control mb-2 mr-sm-2" placeholder="Enter your rating /10" id="rating">
+                        <button type="submit" class="btn btn-block bg-blue text-black border-blue modal-btn mb-2">Add to reading list</button>
+                    </form>
+                    <p class="text-blue lead">Not right? Search again below.</p>
+                </div>
+</div>
+<script>
+    $("#confirm").ready(function() {
+       document.getElementById('confirm').scrollIntoView();
+    });
+</script>

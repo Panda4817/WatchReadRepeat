@@ -1,0 +1,34 @@
+<h4>Results: Which one?</h4>
+<br>
+<table id="results-t" class="table table-dark table-striped table-hover text-grey bg-black">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Author(s)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in results %}
+                                <tr id="{{ row['id']|e }}" class="cursor" onclick="submitForm('{{ row.id|e }}')">
+                                <td><img name="img" class="poster align-self-center mx-auto d-block img-fluid"
+
+                                src="{{ row['smallimage']|e }}"
+
+                                alt="cover" book_id="{{ row['id']|e }}"></td>
+                                <td>{{ row['title'] }}</td>
+                                <td>
+                                    {% for x in row['authors'] %}
+                                        {{ x }}<br>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+<script>
+    $("#results-t").ready(function() {
+       document.getElementById('results-t').scrollIntoView();
+    });
+</script>

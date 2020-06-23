@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="A website to track movies and tv shows you are watching, watched or want to watch. Also track books you are reading, already read or want to read.">
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+   <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+
+    <link href="/static/styles.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="manifest" href="/static/site.webmanifest">
+
+  <title>Watch Read Repeat: {% block title %}{% endblock %}</title>
+</head>
+
+<body class="bg-linear-blackgrey" id="my-top">
+  <nav class="navbar fixed-top navbar-expand-sm bg-black">
+  {% if session.user_id %}
+  <a class="navbar-brand text-blue" href="/dashboard">
+    <i class="fas fa-tv" width="30" height="30" class="d-inline-block align-top"></i>&nbsp;<i class="fas fa-book-open" width="30" height="30" class="d-inline-block align-top"></i>&nbsp;<i class="fas fa-redo"  width="30" height="30" class="d-inline-block align-top"></i>
+  Watch Read Repeat
+  </a>
+  {% else %}
+   <a class="navbar-brand text-blue" href="/">
+    <i class="fas fa-tv" width="30" height="30" class="d-inline-block align-top"></i>&nbsp;<i class="fas fa-book-open" width="30" height="30" class="d-inline-block align-top"></i>&nbsp;<i class="fas fa-redo"  width="30" height="30" class="d-inline-block align-top"></i>
+  </a>
+  {% endif %}
+    <button class="navbar-toggler ml-auto custom-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav ml-auto mt-2">
+  {% if session.user_id %}
+  <li class="nav-item">
+    <a class="nav-link text-blue nav-hover" href="/logout">Log Out</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-blue nav-hover" href="/contact">Contact</a>
+  </li>
+  {% else %}
+   <li class="nav-item">
+    <a class="nav-link text-blue nav-hover" href="/login">Login</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-blue nav-hover" href="/register">Register</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-blue nav-hover" href="/contact">Contact</a>
+  </li>
+  {% endif %}
+</ul>
+    </div>
+</nav>
+
+
+ {% if get_flashed_messages(category_filter=["cookie"]) %}
+  <header>
+      <div class="alert alert-success border text-center" role="alert">
+             <h5>Cookies</h5>
+             {{ get_flashed_messages() | join(" ") }}
+            <button type="button" class="close" data-dismiss="alert">Agree</button>
+         </div>
+  </header>
+  {% endif %}
+
+
+  {% if get_flashed_messages(category_filter=["message"]) %}
+  <header>
+      <div class="alert alert-success border text-center" role="alert">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+             {{ get_flashed_messages() | join(" ") }}
+         </div>
+  </header>
+  {% endif %}
+
+<main>
+  {% if session.user_id %}
+  <div class="container-fluid dashboard">
+    <div class="row">
+       <div class="col-lg-2 bg-black" style="min-height: 95vh;">
+       <h2 class="text-blue text-center display-4">
+        {% if contact_signal == true %}
+           Contact Form
+           {% elif too_long == true %}
+               Hello
+            {% else %}
+               Hi, {{ username }}
+           {% endif %}</h2>
+       <nav>
+           <ul class="navbar-nav ml-auto text-center">
+               <li class="nav-item">
+                <a class="nav-link text-blue nav-hover" href="/dashboard">Dashboard</a>
+                </li>
+               <li class="nav-item">
+                <a class="nav-link text-blue nav-hover" href="/profile">Account</a>
+                </li>
+                <h5 class="text-grey text-center pt-5 font-weight-lighter">Movie/TV Show Tracker</h5>
+                <ul class="navbar-nav m-auto text-center">
+                    <li class="nav-item">
+                        <a class="nav-link text-blue nav-hover p-2" href="/watched">Watched</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-blue nav-hover p-2" href="/watching">Watching</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-blue nav-hover p-2" href="/watch-wish">Watch Wishlist</a>
+                    </li>
+                </ul>
+                <h5 class="text-grey text-center pt-5 font-weight-lighter">Book Tracker</h5>
+                <ul class="navbar-nav m-auto text-center">
+                   <li class="nav-item">
+                        <a class="nav-link text-blue nav-hover p-2" href="/read">Read</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-blue nav-hover p-2" href="/reading">Reading</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-blue nav-hover p-2" href="/read-wish" id="start">Read Wishlist</a>
+                    </li>
+                </ul>
+           </ul>
+       </nav>
+    </div>
+    <div class="col pt-3">
+      {% endif %}
+
+       {% block main %}
+       {% endblock %}
+
+       {% if session.user_id %}
+       </div>
+     </div>
+    </div>
+    {% endif %}
+
+
+</main>
+<footer>
+    <div class="container-fluid text-grey text-center bg-black p-2">
+  <div class="row justify-content-center align-items-center">
+    <a class="text-blue animate-up" href="#my-top" title="Back to top">
+      <i class="fas fa-chevron-up"></i>
+    </a>
+  </div>
+  <div class="row justify-content-center align-items-center">
+    <div class= "col-md-6">
+      <p class="text-center">Thank you for using Watch Read Repeat.
+      <br>Click here for site <span class="cursor text-center text-blue" data-toggle="modal" data-target="#t-c">terms and conditions.</span>
+      <br>Click here for site <span class="cursor text-center text-blue" data-toggle="modal" data-target="#p-c">privacy and cookies policy.</span>
+      <br>If you have any questions, contact me via the <a class="footer-contact text-blue text-decoration-none" href="/contact">Contact</a> form.</p>
+    </div>
+    <div class= "col-md-6">
+      <p>Data provided for free by <a href="https://rapidapi.com/hmerritt/api/imdb-internet-movie-database-unofficial" class="footer-contact text-blue text-decoration-none" target="_blank">RapidApi</a> and
+      <a href="https://developers.google.com/books" class="footer-contact text-blue text-decoration-none" target="_blank">Google Books APIs</a>.
+        <br>
+        The site is hosted on PythonAnywhere and here is a link to their <a class="footer-contact text-blue text-decoration-none" href="https://eu.pythonanywhere.com/privacy_v2/" target="_blank">privacy and cookies policy</a> and their <a href="https://www.pythonanywhere.com/terms_v2/" target="_blank" class="footer-contact text-blue text-decoration-none">terms and conditions</a>.</p>
+    </div>
+  </div>
+  <div class="row justify-content-center align-items-center">
+    <p>By using the site you agree to cookies being used. Only strictly necessary session cookies are used.<br><i class="far fa-copyright"></i> 2020</p>
+  </div></div>
+    </footer>
+
+
+ <div class="modal fade" id="t-c">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Terms and Conditions</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <p>By registering you agree for us to store your data in a database and make changes to that data when you update it.</p>
+            <p>By registering with the site you are opting into marketing emails. Once registered you can opt-out from the account page.</p>
+            <p>By registering with the site you are agreeing to the occasional email about your account.</p>
+            <p>By registering with the site you agree to the privacy and cookies policy. Links are in the footer.</p>
+            <p>By registering you understand what the site does and where it gets its data from. Movie/TV show data is  from RapidApi which gets its data from IMDB. Books data is from Google Books API. Links are in the footer.</p>
+            <p>By registering you understand that the data comes from other sources so the site cannot guarantee the accuracy and correctness of the information.</p>
+            <p>By registering you understand that the site is hosted by PythonAnywhere and they have their own privacy and cookies policy that you agree to. Links are in the footer.</p>
+            <p>By registering you agree to use the site in such a way so that no harm/damage comes to any servers/computers and its data that is providing the service.</p>
+
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="p-c">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Privacy and Cookies Policy</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+            <p>Effective Date: April 30, 2020</p>
+            <h6>Information collected and how it is used</h6>
+            <p>Watch Read Repeat only collects and stores information you provide the site: email address, username, password, movies, tv shows and book information.</p>
+            <p>This information is only collected to make the site work. Email, username and password is used to register and secure your account. Movie, tv show and book information are used to make the lists and dashboard work.</p>
+            <h6>Information disclosure</h6>
+            <p>Watch Read Repeat won’t transfer information about you to third parties. We won’t sell information about you to a third-party. The site makes no money from providing the service.</p>
+            <p>The information you provide is stored in a database that is stored on PythonAnywhere. They have their own privacy and cookies policy. Please read this before registering.</p>
+            <h6>Data controller and processor</h6>
+            <p>The account holder is the controller of thier data as you decide what happens with it. Watch Read Repeat processes the data via the database stored with PythonAnywhere.</p>
+            <p>Legal bases: Any user data is only processed where the user has given consent to do so by registering with the site and agreeing to the terms and conditions. The data you provide is needed for the service to work.</p>
+            <p>There is no DPO for Watch Read Repeat, but if have any concerns, please contact via the contact form.</p>
+            <p>The site does NOT use data to make automated decisions. The site does make the dashboard and lists personalised to that user via that data provided by the user.</p>
+            <h6>Your GDPR rights</h6>
+            <p>The right to be informed: Any processing of your data is done with your consent and knowing.</p>
+            <p>The right of access: Any data that belongs to you and is held by the site is also data you have access to.</p>
+            <p>The right to rectification: You can amend or correct your data at anytime.</p>
+            <p>The right to erasure: You have the right to delete your data.</p>
+            <p>The right to restrict processing: You can halt the data processing while the data is being corrected.</p>
+            <p>The right to data portability: You have the right to ask for your data to be downloaded from the site in a readable format.</p>
+            <p>The right to object: You have the right to stop data processing and opt-out of marketing communications.</p>
+            <p>Rights related to automated decision making and profiling: You have the right to decide not to be part of automated descision making. This is not an issue with the site.</p>
+            <h6>Public Data</h6>
+            <p>This is a very new site so it is unlikey to pop up in search engines. If it does, no user information should be visible.</p>
+            <h6>Data Storage</h6>
+            <p>As said above, the site is hosted on PythonAnywhere. PythonAnywhere is used for hardware, software, networking, storage, and related technology to keep Watch Read Repeat running.</p>
+            <p>There are 3 logs maintained: access, server and error logs. By using the service you agree to the transfer and storage of the database in any country PythonAnywhere operates from. Read their policies. Links are in the footer.</p>
+            <p>The database holds information from contact forms and that data gets reviewed and deleted every week.</p>
+            <h6>Third-Party Searches</h6>
+            <p>Everytime you search for a book, movie or tv show, it makes an API call to another site. Watch Read Repeat does not control what data third parties collect in cases like this so links to their websites are in the footer.</p>
+            <h6>Cookies</h6>
+            <p>This website only uses one type of cookie: session cookies.</p>
+            <p>Session cookies are temporary cookies that remain in the cookie file of your browser only until your browser is closed. This enables the site to login the user.</p>
+            <p>This session cookie is vital for the site to work properly so by using the site you agree to the use of this cookie.</p>
+            <p>PythonAnywhere have their own cookies policy and link to that is in the footer.</p>
+            <p>This privacy and cookies policy only covers Watch Read Repeat, not PythonAnywhere or the API websites.</p>
+            <h6>Modifying or Deleting your personal information</h6>
+            <p>If you have an account with this site, you can access, modify or delete your account via the accounts page or through the contact form.</p>
+            <p>If you forget your password, contact us via the contact form and make sure to put your username and email that you used for registering.</p>
+            <p>If you want to export your data before deleting, use the contact form. After an acoount is deleted, your information and content will be unrecoverable.</p>
+            <h6>Data Security</h6>
+            <p>PythonAnywhere uses encryption (HTTPS/TLS) to protect data transmitted to and from the site. However, no data transmission over the Internet is 100% secure, so the site can’t guarantee security. You use the Service at your own risk, and you’re responsible for taking reasonable measures to secure your account.</p>
+            <h6>Email</h6>
+            <p>Sometimes we’ll send you emails about your account, service changes or new policies. You can’t opt out of this type of email (unless you delete your account). But, you can opt out of non-administrative emails through the accounts page of the site.</p>
+            <p>The site won’t email you to ask for your password or other account information. If you receive such an email, please contact us via the contact form so it can be investigated.</p>
+            <h6>Changes</h6>
+            <p>If you hold an account with the site, you will be notified about any changes to this policy.</p>
+            <h6>More information</h6>
+            <p>PythonAnywhere: <a href="https://eu.pythonanywhere.com/privacy_v2/" target="_blank">privacy and cookies policy</a></p>
+            <p>PythonAnywhere: <a href="https://www.pythonanywhere.com/terms_v2/" target="_blank">terms and conditions</a></p>
+            <p><a href="https://developers.google.com/books" target="_blank">Google Books API</a></p>
+            <p><a href="https://rapidapi.com/hmerritt/api/imdb-internet-movie-database-unofficial" target="_blank">RapidApi</a></p>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+      </div>
+    </div>
+  </div>
+</body>
+    <script>
+    window.onload = function() {
+        if ((window.screen.width * window.devicePixelRatio) < 993) {
+            document.getElementById('start').scrollIntoView();
+        }
+        if (window.innerWidth < 993) {
+            document.getElementById('start').scrollIntoView();
+        }
+    };
+
+    $(function() {
+    var $window = $(window),
+        $body = $("body"),
+        $modal = $(".modal"),
+        scrollDistance = 0;
+
+    $modal.on("show.bs.modal", function() {
+        scrollDistance = $window.scrollTop();
+
+        $body.css("top", scrollDistance * -1);
+    });
+
+    $modal.on("hidden.bs.modal", function() {
+        $body.css("top", "");
+        $window.scrollTop(scrollDistance);
+    });
+});
+</script>
+</html>

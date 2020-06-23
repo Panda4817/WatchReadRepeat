@@ -1,0 +1,22 @@
+<form action="/change-type-watching" method="POST">
+    <h4>Choose the new type</h4>
+    <div class="form-check">
+                  <label class="form-check-label" for="movie">
+                    <input type="radio" class="form-check-input" id="movie" name="type" value="movie"
+                    {% if _type == 'movie' %}
+                    checked
+                    {% endif %}>
+                    Movie
+                  </label>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label" for="tv">
+                    <input type="radio" class="form-check-input" id="tv" name="type" value="tv show"
+                    {% if _type == 'tv show' %}
+                    checked
+                    {% endif %}>
+                    TV show
+                  </label>
+                </div>
+          <button class="btn btn-block bg-blue text-black border-blue modal-btn" id="typeButton" type="submit">Change Type</button>
+</form>

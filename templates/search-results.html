@@ -1,0 +1,30 @@
+<h4>Results: Which one?</h4>
+<br>
+<table id="results-t" class="table table-dark table-striped table-hover text-grey bg-black">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>IMDB link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in results %}
+                                <tr id="{{ row['id']|e }}" class="cursor" onclick="submitForm('{{ row.id|e }}')">
+                                <td><img name="img" class="poster align-self-center mx-auto d-block img-fluid"
+
+                                src="{{ row['image']|e }}"
+
+                                alt="poster"></td>
+                                <td>{{ row['title'] }}</td>
+                                <td><a href="https://www.imdb.com/title/{{ row['id']|e }}" target="_blank" name="imdb_id" value="{{ row['id']|e }}" class="text-decoration-none text-grey">{{ row['id'] }}</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+<script>
+    $("#results-t").ready(function() {
+       document.getElementById('results-t').scrollIntoView();
+    });
+</script>

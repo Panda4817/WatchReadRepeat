@@ -1,0 +1,30 @@
+<h4 id="confirm">Confirm and add:</h4>
+<div class="row pb-4">
+                <div class="col-md-6">
+                   <img class="align-self-center mx-auto d-block img-fluid"
+                            src="{{ result['poster']|e }}"
+                            alt="poster">
+                </div>
+                <div class="col-md-6">
+                    <h6>Title: <small class="text-grey">{{ result['title'] }}</small></h6>
+                    <h6>Type: <small class="text-grey">{{ _type }}</small></h6>
+                    {% if _type == "movie" %}
+                    <h6>Year: <small class="text-grey">{{ result['year'] }}</small></h6>
+                    <h6>Length: <small class="text-grey">{{ result['length'] }}</small></h6>
+                    {% endif %}
+                    <h6>Plot: <small class="text-grey">{{ result['plot'] }}</small></h6>
+                    <h6>IMDb link: <a href="https://www.imdb.com/title/{{ result['id']|e }}" class="text-decoration-none" target="_blank"><small class="text-grey">https://www.imdb.com/title/{{ result['id']|e }}</small></a></h6>
+                    <form class="form-inline" action="/add-watching" method="POST">
+                      <label for="rating" class="mr-sm-2 text-blue">Your Rating so far:</label>
+                      <input type="text" name="rating" pattern="(10(\.00?)?|[0-9](\.[0-9][0-9]?)?)" title="rating between 0 and 10" class="form-control mb-2 mr-sm-2" placeholder="Enter your rating /10" id="rating">
+                        <button type="submit" class="btn btn-block bg-blue text-black border-blue modal-btn mb-2">Add to watching</button>
+                    </form>
+                    <p class="text-blue lead">Not right? Search again below.</p>
+                </div>
+</div>
+
+<script>
+    $("#confirm").ready(function() {
+       document.getElementById('confirm').scrollIntoView();
+    });
+</script>

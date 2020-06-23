@@ -1,0 +1,237 @@
+@import url('https://use.fontawesome.com/releases/v5.8.2/css/all.css');
+@import url('https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css');
+
+html {
+  overflow-x: hidden;
+  background: #0b0c10;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body.modal-open {
+        bottom: 0;
+        left: 0;
+        position: fixed;
+        overflow: hidden;
+        right: 0;
+        top: 0;
+    }
+
+header, footer {
+  flex-grow: 0;
+}
+main {
+  flex-grow: 1;
+}
+
+.alert
+{
+  margin-top: 65px;
+  margin-left: 20%;
+  z-index: 2;
+  position:  absolute;
+  width: 300px;
+}
+.bg-black
+{
+  background: #0b0c10 !important;
+
+}
+.bg-blue
+{
+  background: #66fcf1 !important;
+}
+.text-blue
+{
+  color: #66fcf1 !important;
+}
+.text-pink {
+  color: #fc6671;
+}
+.text-black
+{
+  color: #0b0c10;
+}
+
+.text-grey
+{
+  color: #c5c6c7;
+}
+.border-blue
+{
+     border-color: #66fcf1 !important;
+}
+
+.bg-linear-blackgrey
+{
+  background: linear-gradient(45deg, #0b0c10, #1f2833);
+  background-size: cover;
+}
+
+.custom-toggler
+{
+  border-color: #66fcf1 !important;
+}
+.custom-toggler {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(102, 252, 241, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+
+@media (min-width: 1200px)
+{
+    .logo-icons
+    {
+
+        font-size: 200px;
+    }
+}
+
+@media (max-width: 1200px)
+{
+    .logo-icons
+    {
+
+        font-size: 150px;
+    }
+}
+
+@media (max-width: 720px)
+{
+    .logo-icons
+    {
+
+        font-size: 100px;
+    }
+}
+
+@media (max-width: 520px)
+{
+    .logo-icons
+    {
+
+        font-size: 50px;
+    }
+}
+
+
+.error
+{
+    font-size: 100px;
+}
+
+
+@media (min-width: 540px)
+{
+    .btn-dashboard:hover
+    {
+        background: #66fcf1 !important;
+        color: #0b0c10 !important;
+    }
+}
+
+
+.btn-hover:hover
+{
+    background: #66fcf1 !important;
+    color: #0b0c10 !important;
+}
+
+
+.btn-active {
+  background: #fc6671 !important;
+  color: #0b0c10 !important
+}
+
+.modal-btn:hover {
+  background: linear-gradient(45deg, #0b0c10, #1f2833) !important;
+  background-size: cover !important;
+  color: #66fcf1 !important
+
+}
+
+
+.nav-hover:hover
+{
+    background: linear-gradient(45deg, #0b0c10, #1f2833) !important;
+    background-size: cover !important;
+    border-color: #66fcf1 !important;
+    border: 0.5px solid;
+    border-radius: 5px;
+}
+
+.dashboard
+{
+  padding-top: 55px;
+}
+
+
+
+.animate-up {
+  font-size: 3vh;
+  transition: transform 0.3s ease-out;
+}
+
+.animate-up:hover {
+  transform: translateY(-10px);
+}
+
+.cursor
+{
+  cursor: pointer !important;
+}
+
+.poster
+{
+  width: 75px;
+}
+.small
+{
+  width: 50px;
+}
+.small_books
+{
+  width: 50px;
+}
+.dataTables_length
+{
+  color: #66fcf1 !important;
+}
+
+.dataTables_filter
+{
+  color: #66fcf1 !important;
+}
+
+.dataTables_info
+{
+		color:#66fcf1 !important;
+}
+
+.active > .page-link {
+   background: #66fcf1 !important;
+   color: #0b0c10 !important;
+}
+
+.disabled > .page-link {
+  background: #292b2c !important;
+}
+.page-link {
+  background: #0b0c10 !important;
+  color: #66fcf1 !important;
+  border-color: #66fcf1 !important;
+}
+
+
+.page-link:hover {
+  background: #66fcf1 !important;
+   color: #0b0c10 !important;
+}
+

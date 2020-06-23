@@ -1,0 +1,408 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Read
+{% endblock %}
+
+{% block main %}
+
+<script>
+     function submitForm(idRow) {
+                confirmform = document.createElement("form"); // CREATE A NEW FORM TO DUMP ELEMENTS INTO FOR SUBMISSION
+                confirmform.method = "post"; // CHOOSE FORM SUBMISSION METHOD, "GET" OR "POST"
+                confirmform.action = "/confirm-read";
+                 $("#"+idRow+" td").children("[book_id]").each(function() { // GRAB CHILD ELEMENT with attr OF <TD>'S IN THE ROW IDENTIFIED BY idRow, CLONE THEM, AND DUMP THEM IN OUR FORM
+                    input = document.createElement("input");
+                    input.type = "text";
+                    input.name = this.name;
+                    input.id = input.name +idRow;
+                    input.value = idRow;
+                    confirmform.appendChild(input);
+                });
+                document.body.appendChild(confirmform);
+                confirmform.style.display = "none";
+
+                $(confirmform).ready(function() {
+                let book_id = $("input:last").val();
+
+                $.ajax({
+                        data : {
+                            book_id : book_id
+                        },
+                        type: 'POST',
+                        url: '/confirm-read'
+                    })
+                    .done(function(data) {
+                    console.log(data);
+                    $('#confirmResult').html(data).show();
+                    $('#results').hide();
+                    });
+                });
+
+
+    }
+</script>
+
+
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-10">
+                <h2 class="text-blue text-center display-3">You have read...</h2>
+            </div>
+        </div>
+
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-10 pb-5">
+            <h4 class="text-center"><span class="btn bg-black text-blue border-blue btn-hover p-2" data-toggle="modal" data-target="#add-book">Add book</span></h4>
+            </div>
+        </div>
+
+                <div class="row align-items-center justify-content-center">
+                <div class="col-lg-10 table-responsive-xl" id="table">
+                    <table id="read" class="table table-dark table-striped table-hover text-grey bg-black">
+                        <thead class="text-blue">
+                            <tr>
+                                <th></th>
+                                <th>Type</th>
+                                <th>Title</th>
+                                <th>{{ username }}'s rating so far /10</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in info %}
+                            <tr class="cursor" data-toggle="modal" data-target="#book{{ row['book_id'] }}">
+                                <td><img class="poster align-self-center mx-auto d-block img-fluid"
+
+                                src="{{ row['smallimage']|e }}"
+
+                                alt="cover"></td>
+                                <td>{{ row['type'] }}</td>
+                                <td>{{ row['title'] }}</td>
+                                <td>{{ row['rating'] }}</td>
+                                <td>{{ row['timestamp'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+
+
+
+<div class="modal fade" id="add-book">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content border-blue">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-black">
+          <h4 class="modal-title text-grey">Book Search</h4>
+          <button type="button" class="close text-grey" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-blue bg-black">
+        <div id="confirmResult">
+
+        </div>
+
+       <div class="border rounded border-blue p-3 n3">
+        <form id="search" action="/search-book" method="POST">
+           <div class="form-row">
+             <div class="col-md-6">
+                <div class="form-group text-blue">
+                  <label for="keywords">Keyword(s):</label>
+                  <input class="form-control" name="keywords" id="keywordsInput" placeholder="Enter keywords (case-insensitive)" type="text" required>
+                  </div>
+             </div>
+             <div class="col">
+                 <div class="form-check">
+                  <label class="form-check-label" for="exactkeywords">
+                    <input type="checkbox" class="form-check-input vertical-align-middle" id="exactkeywords" name="exactkeywords" value="exactkeywords">
+                    Exact keyword phrase
+                  </label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-check">
+                  <label class="form-check-label" for="title">
+                    <input type="checkbox" class="form-check-input vertical-align-middle" id="title" name="title" value="title">
+                    Only search in titles (case-sensitive)
+                  </label>
+                </div>
+             </div>
+           </div>
+            <div class="form-row align-items-center pb-4">
+                <div class="col-md-3">
+                  <div class="form-check">
+                  <label class="form-check-label" for="fiction">
+                    <input type="radio" class="form-check-input" id="fiction" name="type" value="fiction" checked>
+                    Fiction
+                  </label>
+                </div>
+                </div>
+                <div class="col-md-3">
+                   <div class="form-check">
+                  <label class="form-check-label" for="no_fiction">
+                    <input type="radio" class="form-check-input" id="non_fiction" name="type" value="non-fiction">
+                    Non-Fiction
+                  </label>
+                </div>
+                </div>
+                <div class="col"></div>
+            </div>
+            <div class="form-row pb-4">
+             <div class="col-md-6">
+                <div class="form-group text-blue">
+                  <label for="authors">Author(s) (optional):</label>
+                  <input class="form-control" name="authors" id="authorsInput" placeholder="Enter author name(s) (case-sensitive)" type="text">
+                  </div>
+             </div>
+             <div class="col">
+                 <div class="form-check">
+                  <label class="form-check-label" for="exactauthors">
+                    <input type="checkbox" class="form-check-input vertical-align-middle" id="exactauthors" name="exactauthors" value="exactauthors">
+                    Exact author names
+                  </label>
+                </div>
+            </div>
+            </div>
+            <div class="form-row pb-4">
+             <div class="col-md-6">
+                <div class="form-group text-blue">
+                  <label for="publisher">Publisher (optional):</label>
+                  <input class="form-control" name="publisher" id="publisherInput" placeholder="Enter publisher name (case-sensitive)" type="text">
+                  </div>
+             </div>
+             <div class="col">
+                 <div class="form-check">
+                  <label class="form-check-label" for="exactpublisher">
+                    <input type="checkbox" class="form-check-input vertical-align-middle" id="exactpublisher" name="exactpublisher" value="exactpublisher">
+                    Exact publisher name
+                  </label>
+                </div>
+            </div>
+            </div>
+            <div class="form-row pb-4">
+             <div class="col-md-6">
+                <div class="form-group text-blue">
+                  <label for="subject">Subject (optional):</label>
+                  <input class="form-control" name="subject" id="subjectInput" placeholder="Enter subject (case-sensitive)" type="text">
+                  </div>
+             </div>
+             <div class="col">
+                 <div class="form-check">
+                  <label class="form-check-label" for="exactsubject">
+                    <input type="checkbox" class="form-check-input vertical-align-middle" id="exactsubject" name="exactsubject" value="exactsubject">
+                    Exact subject name
+                  </label>
+                </div>
+            </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                <div class="form-group text-blue">
+                  <label for="isbn">ISBN (optional):</label>
+                  <input class="form-control" name="isbn" id="isbnInput" placeholder="Enter ISBN number (case-sensitive)" type="text">
+                 </div>
+                 </div>
+            </div>
+           <button class="btn btn-block bg-blue text-black border-blue modal-btn" id="searchButton" type="submit">Search</button>
+        </form>
+
+        </div>
+        <br>
+        <div id="results">
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  </div>
+
+  {% for row in info %}
+  <div class="modal fade"  id="book{{ row['book_id'] }}" aria-hidden:"true" style="display: none;">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content border-blue">
+
+        <!-- Modal Header -->
+        <div class="modal-header bg-black">
+          <h4 class="modal-title text-grey">{{ row['title'] }}</h4>
+          <button type="button" class="close text-grey" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body text-blue bg-black">
+            <div class="row pb-4">
+                <div class="col-md-6">
+                   <img class=" align-self-center mx-auto d-block img-fluid"
+                              src="{% if row['largeimage'] == 'None' or not row['largeimage']  %}
+                                    {% if row['mediumimage'] == 'None' or not row['mediumimage'] %}
+                                        {{ row['smallimage']|e }}
+                                    {% else %}
+                                         {{ row['mediumimage']|e }}
+                                    {% endif %}
+                                {% else %}
+                                    {{ row['largeimage']|e }}
+                                {% endif %}" alt="cover">
+                </div>
+                <div class="col-md-6">
+                    <h6>Type: <small class="text-grey">{{ row['type'] }}</small></h6>
+                    <h6>Author(s): <small class="text-grey" style="letter-spacing: -1px;">
+                        {% for x in row['authors'] %}
+                                        {% if x == "'" %}
+                                            <br>
+                                        {% elif x == " " %}
+                                            &nbsp;
+                                        {% else %}
+                                            {{x}}
+                                        {% endif %}
+                                    {% endfor %}
+                        </small></h6>
+                    <h6>Publisher: <small class="text-grey">{{ row['publisher'] }}</small></h6>
+                    <h6>Description: <small class="text-grey">{{ row['description']|safe }}</small></h6>
+                    <h6>Your Rating: <small class="text-grey">{{ row['rating'] }} / 10</small></h6>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <form action="/remove-read" method="POST">
+                        <input type="text" name="remove" value="{{ row['book_id']|e }}" style="display: none;">
+                        <h6><button type="submit" class="btn btn-block bg-blue text-black border-blue modal-btn">Remove</button></h6>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                   <form action="/type-read" method="POST">
+                       <input type="text" name="type{{ row['book_id']|e }}" value="{{ row['book_id']|e }}" style="display: none;">
+                       <h6><button type="submit" book_id="{{ row['book_id']|e }}" class="btn btn-block bg-blue text-black border-blue modal-btn editType">Edit Type</button></h6>
+                    </form>
+                </div>
+                <div class="col-md-4">
+                    <form action="/rating-read" method="POST">
+                        <input type="text" name="rating{{ row['book_id']|e }}" value="{{ row['book_id']|e }}" style="display: none;">
+                        <h6><button type="submit" book_id="{{ row['book_id']|e }}" class="btn btn-block bg-blue text-black border-blue modal-btn editRating">Edit Rating</button></h6>
+                    </form>
+                </div>
+            </div>
+            <div id="typeChange{{ row['book_id']|e }}">
+            </div>
+            <div id="ratingChange{{ row['book_id']|e }}">
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <script>
+        $(document).ready( function () {
+            $('#read').DataTable( {
+
+                "order": [[4, "desc"]],
+            	"columnDefs": [
+            	    {
+                        "targets": 0,
+                        "searchable": false,
+                        "orderable": false
+                    },
+                    {
+                        "targets": 4,
+                        "visible": false
+                    },
+                    {
+                        "targets": "_all",
+                        "width": "25%"
+                    }
+                ]
+
+            });
+
+            $('#search').on('submit', function(event) {
+               $.ajax({
+                  data : {
+
+                     keywords: $('#keywordsInput').val(),
+                     exactkeywords: $('input[name="exactkeywords"]:checked').val(),
+                     title : $('input[name="title"]:checked').val(),
+                     type: $('input[name="type"]:checked').val(),
+                     authors: $('#authorsInput').val(),
+                     exactauthors: $('input[name="exactauthors"]:checked').val(),
+                     publisher: $('#publisherInput').val(),
+                     exactpublisher: $('input[name="exactpublisher"]:checked').val(),
+                     subject: $('#subjectInput').val(),
+                     exactsubject: $('input[name="exactsubject"]:checked').val(),
+                     isbn: $('#isbnInput').val(),
+                         },
+
+                     type : 'POST',
+                     url : '/search-book'
+                    })
+                .done(function(data) {
+
+                  $('#results').html(data).show();
+                  $('#confirmResult').hide();
+              });
+              event.preventDefault();
+             $('#add-book').on('hide.bs.modal', function() {
+                 $('#results').empty();
+                  $('#confirmResult').empty();
+             });
+
+            });
+
+
+            $('.editType').on('click', function(event) {
+
+               let book_id = $(this).attr('book_id');
+
+               $.ajax({
+                  data : {
+                        typeChange: book_id
+                         },
+                     type : 'POST',
+                     url : '/type-read'
+                    })
+                .done(function(data) {
+
+                  $('#typeChange'+book_id).html(data).show();
+                  $('#ratingChange'+book_id).hide();
+              });
+              event.preventDefault();
+             $('#book'+book_id).on('hide.bs.modal', function() {
+                  $('#typeChange'+book_id).empty();
+            });
+
+
+            });
+
+            $('.editRating').on('click', function(event) {
+
+               let book_id = $(this).attr('book_id');
+
+               $.ajax({
+                  data : {
+                        ratingChange: book_id
+                         },
+                     type : 'POST',
+                     url : '/rating-read'
+                    })
+                .done(function(data) {
+
+                  $('#ratingChange'+book_id).html(data).show();
+                  $('#typeChange'+book_id).hide();
+              });
+              event.preventDefault();
+            $('#book'+book_id).on('hide.bs.modal', function() {
+                  $('#ratingChange'+book_id).empty();
+            });
+
+
+            });
+
+    });
+
+
+
+  </script>
+
+{% endblock %}

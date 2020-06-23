@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Contact
+{% endblock %}
+
+{% block main %}
+    {% if session.user_id %}
+            <div class="row align-items-start">
+            <div class="col-md-12 text-blue p-3 mb-3">
+              <form action="/contact" method="post">
+                <div class="form-group">
+                   <label for="name">Name/Username:</label>
+                  <div class="input-group mx-auto">
+                        <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-user text-black"></i></span></div>
+                  <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Enter name/username (optional)" type="text">
+                  </div></div>
+                  <div class="form-group">
+                   <label for="email">Email:</label>
+                   <div class="input-group mx-auto">
+                        <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-at text-black"></i></span></div>
+                  <input autocomplete="off" autofocus class="form-control" name="email" placeholder="Enter email" type="email" required pattern="^.+@[^\.].*\.[a-z]{2,}$" title="email address format: something@domain.something">
+                  </div></div>
+                <div class="form-group">
+                  <label for="password">Comments:</label>
+                  <textarea autocomplete="off" autofocus class="form-control" name="comments" placeholder="Enter query/comments" row="5" required></textarea>
+                  </div>
+                <button class="btn btn-block bg-black text-grey border-blue btn-hover" type="submit">Submit</button>
+            </form>
+            </div>
+            </div>
+    {% else %}
+    <div class="jumbotron jumbotron-fluid bg-linear-blackgrey">
+    <div class="container-fluid text-center p-3">
+      <h1 class="display-1 text-blue">Watch Read Repeat</h1>
+      <p class="lead text-grey" id="start">Keep track of movies, tv shows and books you have watched and read, all in one place!</p>
+    </div>
+  </div>
+
+    <div class="container p-3 text-blue bg-black mb-3">
+       <form action="/contact" method="post">
+        <div class="form-group">
+           <label for="name">Name/Username:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-user text-black"></i></span></div>
+          <input autocomplete="off" autofocus class="form-control" name="name" placeholder="Enter name/username (optional)" type="text">
+          </div></div>
+          <div class="form-group">
+           <label for="email">Email:</label>
+           <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-at text-black"></i></span></div>
+          <input autocomplete="off" autofocus class="form-control" name="email" placeholder="Enter email" type="email" required pattern="^.+@[^\.].*\.[a-z]{2,}$" title="email address format: something@domain.something">
+          </div></div>
+        <div class="form-group">
+          <label for="password">Comments:</label>
+          <textarea autocomplete="off" autofocus class="form-control" name="comments" placeholder="Enter query/comments" row="5" required></textarea>
+          </div>
+        <button class="btn btn-block bg-black text-grey border-blue btn-hover" type="submit">Submit</button>
+    </form>
+    </div>
+    {% endif %}
+{% endblock %}

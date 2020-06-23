@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+    <div class="jumbotron jumbotron-fluid bg-linear-blackgrey">
+    <div class="container-fluid text-center p-3">
+      <h1 class="display-1 text-blue">Watch Read Repeat</h1>
+      <p class="lead text-grey" id="start">Keep track of movies, tv shows and books you have watched and read, all in one place!</p>
+    </div>
+  </div>
+    <div class="container text-blue bg-black mb-4">
+       <form action="/login" method="post" class="p-3">
+        <div class="form-group">
+           <label for="username">Username:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-user text-black"></i></span></div>
+          <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Enter username (case-sensitive)" type="text" required>
+          </div></div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-key text-black"></i></span></div>
+          <input class="form-control" name="password" placeholder="Enter password (case-sensitive)" type="password" required>
+          </div></div>
+        <button class="btn btn-block bg-black text-grey border-blue btn-hover" type="submit">Log In</button>
+    </form>
+    </div>
+{% endblock %}

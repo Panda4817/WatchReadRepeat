@@ -1,0 +1,6 @@
+<h4>Fill out form with new rating</h4>
+<form class="form-inline" action="/change-rating-reading" method="POST">
+        <label for="rating" class="mr-sm-2 text-blue">Your Rating so far:</label>
+        <input type="text" name="rating" pattern="(10(\.00?)?|[0-9](\.[0-9][0-9]?)?)" title="rating between 0 and 10" class="form-control mb-2 mr-sm-2" placeholder="Enter your rating /10">
+          <button class="btn btn-block bg-blue text-black border-blue modal-btn" id="ratingButton" type="submit">Change Rating</button>
+</form>

@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+     <div class="jumbotron jumbotron-fluid bg-linear-blackgrey">
+    <div class="container-fluid text-center p-3">
+      <h1 class="display-1 text-blue">Watch Read Repeat</h1>
+      <p class="lead text-grey" id="start">Keep track of movies, tv shows and books you have watched and read, all in one place!</p>
+    </div>
+  </div>
+    <div class="container p-3 text-blue bg-black mb-3">
+        <div class="row">
+        <div class="col-md-6">
+       <p class="text-center">
+                <br><br>
+                A valid email address is needed to verify you.
+                <br><br><br>
+                Username should <strong>not</strong> contain your real name. It should <strong>only contain letters and/or numbers</strong>.
+                <br><br><br>
+                Password needs to be minimum length of <strong>6</strong> and maximum length of <strong>15</strong>, with <strong>no spaces</strong>.
+                <br><br>
+                Password needs to have at least 1 <strong>number</strong>, at least 1 <strong>lowercase</strong> letter, at least 1 <strong>uppercase</strong> letter and at least 1 <strong>special character</strong>.
+    </p>
+
+    </div>
+    <div class="col-md-6 align-self-center">
+        <form action="/register" method="post">
+        <div class="form-group">
+           <label for="email">Email:</label>
+           <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-at text-black"></i></span></div>
+          <input autocomplete="off" autofocus class="form-control" name="email" placeholder="Enter email" type="email" required pattern="^.+@[^\.].*\.[a-z]{2,}$" title="email address format: something@domain.something">
+          </div></div>
+          <div class="form-group">
+           <label for="username">Username:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-user text-black"></i></span></div>
+          <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Enter username (case-sensitive)" type="text" pattern="^[a-zA-Z0-9]*$" title="Only letters and/or numbers" required>
+          </div></div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-key text-black"></i></span></div>
+          <input autocomplete="off" class="form-control" name="password" placeholder="Enter password (case-sensitive)" type="password" required>
+          </div></div>
+           <div class="form-group">
+          <label for="password">Confirm password:</label>
+          <div class="input-group mx-auto">
+                <div class="input-group-prepend"><span class="input-group-text bg-blue"><i class="fas fa-key text-black"></i></span></div>
+          <input class="form-control" name="confirmation" placeholder="Enter password again" type="password" required>
+          </div></div>
+          <div class="form-check">
+            <label class="form-check-label" for="t&c">
+                <input type="checkbox" class="form-check-input vertical-align-middle" id="t&c" name="t&c" required>
+                I have read and agree to the <span class="cursor text-center" data-toggle="modal" data-target="#t-c"><strong>terms and conditions</strong></span> and the <span class="cursor text-center" data-toggle="modal" data-target="#p-c"><strong>privacy and cookies policy</strong></span> of this site.
+            </label>
+        </div>
+        <br>
+        <button class="btn btn-block bg-black text-grey border-blue btn-hover" type="submit">Register</button>
+    </form>
+    </div>
+    </div>
+    </div>
+
+
+{% endblock %}

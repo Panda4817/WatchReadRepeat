@@ -1,0 +1,22 @@
+<form action="/change-type-reading" method="POST">
+    <h4>Choose the new type</h4>
+    <div class="form-check">
+                  <label class="form-check-label" for="fiction">
+                    <input type="radio" class="form-check-input" id="fiction" name="type" value="fiction"
+                    {% if _type == 'fiction' %}
+                    checked
+                    {% endif %}>
+                    Fiction
+                  </label>
+                </div>
+                <div class="form-check">
+                  <label class="form-check-label" for="non-fiction">
+                    <input type="radio" class="form-check-input" id="non-fiction" name="type" value="non-fiction"
+                    {% if _type == 'non-fiction' %}
+                    checked
+                    {% endif %}>
+                    Non-fiction
+                  </label>
+                </div>
+          <button class="btn btn-block bg-blue text-black border-blue modal-btn" id="typeButton" type="submit">Change Type</button>
+</form>

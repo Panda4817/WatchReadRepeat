@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Error
+{% endblock %}
+
+{% block main %}
+    {% if session.user_id %}
+    <div class="row">
+            <div class="col-md-6 text-center text-blue dashboard" id="start">
+                <h1>{{ code }}</h1>
+                <h2>{{ message }}</h2>
+            </div>
+            <div class="col-md-6 text-center dashboard">
+                <i class="far fa-frown text-blue error"></i>
+            </div></div>
+    {% else %}
+     <div class="jumbotron jumbotron-fluid bg-linear-blackgrey">
+    <div class="container-fluid text-center">
+      <h1 class="display-1 text-blue">Watch Read Repeat</h1>
+      <p class="lead text-grey">Keep track of movies, tv shows and books you have watched and read, all in one place!</p>
+    </div>
+
+    <div class="container p-5 text-blue bg-black">
+        <div class="row" id="start">
+            <div class="col-6">
+        <h1>{{ code }}</h1>
+        <h2>{{ message }}</h2>
+        </div>
+        <div class="col-6 text-center">
+            <i class="far fa-frown text-blue error"></i>
+        </div>
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
